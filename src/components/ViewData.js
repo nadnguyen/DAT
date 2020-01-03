@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BarChart from '../libs/chart-race-react';
-
+import randomcolor from 'randomcolor';
 
 class ViewData extends Component {
 
@@ -14,7 +14,7 @@ class ViewData extends Component {
             const {name,color,logo,...otherValue } = value
             data[name]=Object.values(otherValue)
             time=Object.keys(otherValue)
-            colors[name]=color;
+            colors[name]=randomcolor();
             labels[name]=(
                 <div style={{textAlign:"center",}}>
                   <div>{name}</div>
