@@ -16,8 +16,15 @@ class ViewData extends Component {
             time=Object.keys(otherValue)
             colors[name]=randomcolor();
             labels[name]=(
-                <div style={{textAlign:"center",}}>
-                  <div>{name}</div>
+                <div style={{
+                    textAlign:"center",
+                    display: 'flex',
+                    alignItems:'center',
+                    justifyContent: 'center'
+                    }}>
+                    {logo && <img src={logo} alt={name} style={{ width: '20px',                     marginRight: '8px'
+}}/>}
+                    <div>{name}</div>
                 </div>
                 )
             len = time.length
@@ -29,36 +36,43 @@ class ViewData extends Component {
     }
 
     render(){
-        const { data,time,labels,colors,len } = this.getData(this.props.data)
-        
-        return ( <BarChart 
-            start={true}
-            data={data} 
-            timeline={time}
-            labels={labels}
-            colors={colors}
-            len={len}
-            timeout={400}
-            delay={100}
-            timelineStyle={{
-              textAlign: "center",
-              fontSize: "50px",
-              color: "rgb(148, 148, 148)",
-              marginBottom: "100px"
-            }}
-            textBoxStyle={{
-              textAlign: "right",
-              color: "rgb(133, 131, 131)",
-              fontSize: "30px",
-            }}
-            barStyle={{
-              height: "60px",
-              marginTop: "10px",
-              borderRadius: "10px",
-            }}
-            width={[15, 75, 10]}
-            maxItems={100}
-          />)
+        const { data,time,labels,colors,len } = this.getData(this.props.data);
+        const barChartHeight = window.innerHeight - 188;
+        const barMarginTop = 10;
+        const dataLength = this.props.data.length;
+        const barHeight = (barChartHeight - barMarginTop*dataLength)/dataLength;
+
+        return ( 
+            <BarChart 
+                start={true}
+                data={data} 
+                timeline={time}
+                labels={labels}
+                colors={colors}
+                len={len}
+                timeout={500}
+                delay={100}
+                timelineStyle={{
+                    textAlign: "center",
+                    fontSize: "50px",
+                    color: "rgb(148, 148, 148)",
+                    marginBottom: "20px"
+                    }}
+                textBoxStyle={{
+                    textAlign: "right",
+                    color: "rgb(133, 131, 131)",
+                    fontSize: `${barHeight/2}px`,
+                    fontWeight: 'bold',
+                    }}
+                barStyle={{
+                    height: `${barHeight}px`,
+                    marginTop: `${barMarginTop}px`,
+                    borderRadius: `${barHeight/2}px`,
+                    }}
+                width={[15, 75, 10]}
+                maxItems={100}
+            />
+          )
     }
 }
 export default ViewData;

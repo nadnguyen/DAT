@@ -1,0 +1,47 @@
+.ant-layout-header {
+    background: white;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    line-height: 40px;
+    > div {
+        flex-basis: 50%;
+    }
+
+    .left-header {
+        display: flex;
+    }
+    
+    .right-header {
+        text-align: right;
+    }
+}
+
+.ant-layout-content {
+    min-height: calc(100vh - 93px);
+    padding: 0 16px;
+}
+
+.ant-layout-footer {
+    padding: 16px 50px;
+}
+
+.upload-area {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 93px);
+    .ant-upload-drag-container {
+        padding: 100px 24px;
+    }
+    .ant-upload-list-text {
+        height: 30px;
+    }
+}
+
+.logo {
+    img {
+       height: 30px;
+    }
+}
