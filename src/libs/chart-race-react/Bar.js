@@ -40,7 +40,7 @@ function Bar(props) {
                 <div style={{
                     ...posDefaultStyle, 
                     ...posTransitionStyles[state],
-                    width: `${props.width[0]}%`
+                    width: `${props.width[0]}%`,
                 }}>
                     {props.label}
                 </div>

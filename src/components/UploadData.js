@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { Upload, Icon, Button } from 'antd';
 import XLSX from 'xlsx';
+
+const { Dragger } = Upload;
 
 const make_cols = refstr => {
 	let o = [], C = XLSX.utils.decode_range(refstr).e.c + 1;
@@ -11,19 +14,41 @@ const SheetJSFT = [
 	"xlsx", "xlsb", "xlsm", "xls", "xml", "csv", "txt", "ods", "fods", "uos", "sylk", "dif", "dbf", "prn", "qpw", "123", "wb*", "wq*", "html", "htm"
 ].map(function(x) { return "." + x; }).join(",");
 
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess("ok");
+  }, 0);
+};
+
+
 class UploadData extends Component {
     constructor(props) {
         super(props);
         this.state = {
           file: {},
           data: [],
-          cols: []
+          cols: [],
+          selectedFileList: []
         }
     }
 
-    handleChange = (e) => {
-        const files = e.target.files;
-        if (files && files[0]) this.setState({ file: files[0] });
+    handleChange = (info) => {
+      const nextState = {};
+      switch (info.file.status) {
+        case "uploading":
+          nextState.selectedFileList = [info.file];
+          break;
+        case "done":
+          nextState.file = info.file;
+          nextState.selectedFileList = [info.file];
+          break;
+  
+        default:
+          // error or removed
+          nextState.selectedFile = null;
+          nextState.selectedFileList = [];
+      }
+      this.setState(() => nextState);
     };
      
     handleFile = () => {
@@ -43,31 +68,42 @@ class UploadData extends Component {
           const data = XLSX.utils.sheet_to_json(ws);
           /* Update state */
           this.setState({ data: data, cols: make_cols(ws['!ref']) }, () => {
-              if(onView)
-                onView(data)
-          });
-     
+            if(onView)
+              onView(data)
+          }); 
         };
      
-        if (rABS) {
-          reader.readAsBinaryString(this.state.file);
-        } else {
-          reader.readAsArrayBuffer(this.state.file);
-        };
+        reader.readAsText(this.state.file.originFileObj);
     }
 
     render() {
-        const { file,data } = this.state;
-        console.log(data)
+        const { file, selectedFileList } = this.state;
         return (
-          <div>
-            <label htmlFor="file">Upload Data</label>
-            <br />
-            <input type="file" className="form-control" id="file" accept={SheetJSFT} onChange={this.handleChange} />
-            <br />
-            {file.name&&<input type='submit' 
-              value="View Chart"
-              onClick={this.handleFile} />}
+          <div className="upload-area">
+            <Dragger 
+              name="file" 
+              multiple={false} 
+              customRequest={dummyRequest} 
+              onChange={this.handleChange}
+              fileList={selectedFileList}
+              accept={SheetJSFT}
+              >
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">
+                Support files: {SheetJSFT}.
+              </p>
+            </Dragger>
+              <Button 
+                size="large"
+                type="primary" 
+                disabled={!file.name}
+                onClick={this.handleFile}>
+                View Chart
+              </Button>
+            
         </div>
         );
     }
