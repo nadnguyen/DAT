@@ -53,6 +53,7 @@ class UploadData extends Component {
      
     handleFile = () => {
         const { onView } = this.props;
+        const { file } = this.state;
         /* Boilerplate to set up FileReader */
         const reader = new FileReader();
         const rABS = !!reader.readAsBinaryString;
@@ -72,8 +73,8 @@ class UploadData extends Component {
               onView(data)
           }); 
         };
-     
-        reader.readAsText(this.state.file.originFileObj);
+    
+        reader.readAsBinaryString(file.originFileObj);
     }
 
     render() {

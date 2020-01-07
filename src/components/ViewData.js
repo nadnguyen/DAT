@@ -20,13 +20,16 @@ class ViewData extends Component {
             colors[name]=randomcolor();
             labels[name]=(
                 <div style={{
-                    textAlign:"center",
                     display: 'flex',
                     alignItems:'center',
-                    justifyContent: 'center'
                     }}>
-                    {logo && <img src={logo} alt={name} style={{ width: '20px',   height: '20px',marginRight: '8px'
-}}/>}
+                    {logo && <img src={logo} alt={name} 
+                        style={{ 
+                            width: '20px',                     
+                            marginRight: '8px',
+                            height: '20px',
+                            objectFit: 'cover'
+                    }}/>}
                     <div>{name}</div>
                 </div>
                 )
@@ -99,7 +102,7 @@ class ViewData extends Component {
                 background:'#fff',
                
             }}>
-                <Table bordered={false} scroll={{ x: 1300 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
+                <Table  scroll={{ x: 1300 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
             </Col>
         </Row> )
     }
