@@ -17,13 +17,16 @@ class ViewData extends Component {
             colors[name]=randomcolor();
             labels[name]=(
                 <div style={{
-                    textAlign:"center",
                     display: 'flex',
                     alignItems:'center',
-                    justifyContent: 'center'
                     }}>
-                    {logo && <img src={logo} alt={name} style={{ width: '20px',                     marginRight: '8px'
-}}/>}
+                    {logo && <img src={logo} alt={name} 
+                        style={{ 
+                            width: '20px',                     
+                            marginRight: '8px',
+                            height: '20px',
+                            objectFit: 'cover'
+                    }}/>}
                     <div>{name}</div>
                 </div>
                 )
