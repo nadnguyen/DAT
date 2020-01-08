@@ -100,7 +100,7 @@ class ViewData extends Component {
             </Col>
             <Col span={12} style ={{
                 background:'#fff',
-               
+                marginTop:'10px'
             }}>
                 <Table  scroll={{ x: 1300 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
             </Col>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Upload, Icon, Button } from 'antd';
 import XLSX from 'xlsx';
-
+import tempCSV from '../assets/templates/CSVtemplate.csv';
+import tempXLSX from '../assets/templates/EXCELtemplate.xlsx';
 const { Dragger } = Upload;
 
 const make_cols = refstr => {
@@ -11,7 +12,7 @@ const make_cols = refstr => {
 };
 
 const SheetJSFT = [
-	"xlsx", "xlsb", "xlsm", "xls", "xml", "csv", "txt", "ods", "fods", "uos", "sylk", "dif", "dbf", "prn", "qpw", "123", "wb*", "wq*", "html", "htm"
+	"xlsx", "csv"
 ].map(function(x) { return "." + x; }).join(",");
 
 const dummyRequest = ({ file, onSuccess }) => {
@@ -97,6 +98,7 @@ class UploadData extends Component {
                 Support files: {SheetJSFT}.
               </p>
             </Dragger>
+           
               <Button 
                 size="large"
                 type="primary" 
@@ -104,7 +106,9 @@ class UploadData extends Component {
                 onClick={this.handleFile}>
                 View Chart
               </Button>
-            
+              <br/>
+              <a href={tempCSV} download="CSVtemplate.csv">Download CSV Template</a>
+              <a href={tempXLSX} download="EXCELtemplate.xlsx">Download EXCEL Template</a>
         </div>
         );
     }
