@@ -1,5 +1,8 @@
 import React from 'react';
 import Bar from './Bar';
+import { Button } from 'antd';
+
+const ButtonGroup = Button.Group;
 
 const classes = {
   barChart: {
@@ -25,26 +28,52 @@ class BarChart extends React.Component {
             prevRank: initRank,
             currRank: initRank,
             maxVal: maxVal,
-            started: props.start
+            started: false,
         };
     }
   
-    componentDidMount = () => {
-      if(this.props.start){
-        var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
-        this.setState({intervalId: intervalId});
-      }
-    }
+    // componentDidMount = () => {
+    //   if(this.props.start){
+    //     var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+    //     this.setState({intervalId: intervalId});
+    //   }
+    // }
 
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.start) {
-        var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
-        this.setState({intervalId: intervalId});
-      }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //   if (nextProps.start) {
+    //     var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+    //     this.setState({intervalId: intervalId});
+    //   }
+    // }
 
     componentWillUnmount = () => {
       clearInterval(this.state.intervalId);
+    }
+
+    handleStop = () => {
+      clearInterval(this.state.intervalId);
+      this.setState({
+        start:false
+      })
+    }
+
+    handleReplay = () => {
+      let [initRank, maxVal] = this.sortAxis(0);
+      this.setState({
+        idx: 0,
+        prevRank: initRank,
+        currRank: initRank,
+        maxVal: maxVal,
+        started: true,
+      },()=>{
+        var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+        this.setState({intervalId: intervalId});
+      })
+    }
+    
+    handlePlay = () => {
+      var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+      this.setState({intervalId: intervalId, start:true});
     }
   
     update = () => {
@@ -131,8 +160,18 @@ class BarChart extends React.Component {
     }
   
     render(){
+      const { start, idx } = this.state;
+      const { timeline } = this.props;
+      const isEnd = idx + 1 === timeline.length;
+      
       return (
         <div style={classes.container}>
+          <ButtonGroup style={{float:'right',marginTop:'10px'}}>
+            {start&&!isEnd&&<Button onClick={this.handleStop} icon='pause'/>}
+            {!start&&<Button onClick={this.handlePlay} icon='caret-right' />}
+            {isEnd&&<Button onClick={this.handleReplay} icon='reload'/>}
+          </ButtonGroup>
+          <br/>
           <div style={this.props.timelineStyle}>
             {this.props.timeline[this.state.idx]}
           </div>
@@ -157,6 +196,7 @@ class BarChart extends React.Component {
               })
             }
           </div>
+       
         </div>
       );
     }

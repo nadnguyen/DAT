@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import BarChart from '../libs/chart-race-react';
 import randomcolor from 'randomcolor';
 import { Row, Col, Table } from 'antd';
+import { Button, Icon } from 'antd';
 
+const ButtonGroup = Button.Group;
 
 
 class ViewData extends Component {
@@ -68,14 +70,13 @@ class ViewData extends Component {
         return ( <Row gutter={[16, 16]}>
             <Col span={12}>
             <BarChart 
-                start={true}
                 data={data} 
                 timeline={time}
                 labels={labels}
                 colors={colors}
                 len={len}
                 timeout={800}
-                delay={100}
+                delay={50}
                 timelineStyle={{
                     textAlign: "center",
                     fontSize: "50px",
