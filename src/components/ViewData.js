@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import BarChart from '../libs/chart-race-react';
 import randomcolor from 'randomcolor';
 import { Row, Col, Table } from 'antd';
-import { Button, Icon } from 'antd';
-
-const ButtonGroup = Button.Group;
 
 
 class ViewData extends Component {
@@ -44,20 +41,29 @@ class ViewData extends Component {
     }
 
     getColumnTable = (data) =>{
-        return Object.keys(data||{}).map(value=>{
-            if(value==='logo')
-                return ({
-                    title: value.toUpperCase(),
-                    dataIndex: value,
-                    render: (data) => <img src={data} alt='logo' style={{ width: '20px',  height: '20px'
-                }}/>,
-                });
+        const {name,logo,...ownProps } = data;
+        const comlumns = [
+            {
+                title:'Name',
+                dataIndex:'name',
+                width:100,
+                fixed:'left'
+            },
+            {
+                title:'Logo',
+                dataIndex:'logo',
+                width:100,
+                render: (data) => <img src={data} alt='logo' style={{ width: '20px',  height: '20px'}} />
+            }
+        ]
+        return [...comlumns,...Object.keys(ownProps||{}).map(value=>{
             return ({
-                title: value.toUpperCase(),
+                title: value,
                 dataIndex: value,
-                fixed:value==='name'?true:false,
+                width:100
             })
         })
+        ]
     }
 
     render(){
@@ -75,8 +81,8 @@ class ViewData extends Component {
                 labels={labels}
                 colors={colors}
                 len={len}
-                timeout={800}
-                delay={50}
+                timeout={500}
+                delay={100}
                 timelineStyle={{
                     textAlign: "center",
                     fontSize: "50px",
@@ -96,6 +102,7 @@ class ViewData extends Component {
                     }}
                 width={[15, 75, 10]}
                 maxItems={100}
+                maxItemsShow={10}
           
             />
             </Col>
@@ -103,7 +110,7 @@ class ViewData extends Component {
                 background:'#fff',
                 marginTop:'10px'
             }}>
-                <Table  scroll={{ x: 1300 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
+                <Table  scroll={{ x: 1300,y: barChartHeight }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
             </Col>
         </Row> )
     }

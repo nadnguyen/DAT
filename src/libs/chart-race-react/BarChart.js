@@ -143,7 +143,7 @@ class BarChart extends React.Component {
       const currIdx = this.state.idx;
       const prevIdx = (currIdx > 0 ? currIdx - 1 : 0);
       const value = this.props.data[name][currIdx];
-      const hidden = (this.state.currRank[name] === undefined);
+      const hidden = (this.state.currRank[name] === undefined||this.state.currRank[name]>this.props.maxItemsShow-1);
       const currStyle = {
         ...this.props.barStyle,
         marginTop: `calc(${this.state.currRank[name]} * ${this.barHeight})`,
@@ -179,7 +179,7 @@ class BarChart extends React.Component {
             {
               Object.keys(this.props.data).map(name => {
                 const [value, hidden, currStyle, prevStyle] = this.getInfoFromRank(name);
-                if(hidden) return (<div key={name}></div>);
+                if(hidden) return null;
                 return (
                     <Bar
                       name={name}
