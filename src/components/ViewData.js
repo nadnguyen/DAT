@@ -81,7 +81,6 @@ class ViewData extends Component {
                 labels={labels}
                 colors={colors}
                 len={len}
-                timeout={1000}
                 delay={0}
                 timelineStyle={{
                     textAlign: "center",

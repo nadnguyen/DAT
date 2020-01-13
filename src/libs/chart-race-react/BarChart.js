@@ -1,6 +1,6 @@
 import React from 'react';
 import Bar from './Bar';
-import { Button } from 'antd';
+import { InputNumber,Form,Button } from 'antd';
 
 const ButtonGroup = Button.Group;
 
@@ -29,22 +29,10 @@ class BarChart extends React.Component {
             currRank: initRank,
             maxVal: maxVal,
             started: false,
+            timeout:1000,
         };
     }
-  
-    // componentDidMount = () => {
-    //   if(this.props.start){
-    //     var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
-    //     this.setState({intervalId: intervalId});
-    //   }
-    // }
 
-    // componentWillReceiveProps(nextProps) {
-    //   if (nextProps.start) {
-    //     var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
-    //     this.setState({intervalId: intervalId});
-    //   }
-    // }
 
     componentWillUnmount = () => {
       clearInterval(this.state.intervalId);
@@ -66,13 +54,13 @@ class BarChart extends React.Component {
         maxVal: maxVal,
         started: true,
       },()=>{
-        var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+        var intervalId = setInterval(this.update, this.state.timeout + this.props.delay);
         this.setState({intervalId: intervalId});
       })
     }
     
     handlePlay = () => {
-      var intervalId = setInterval(this.update, this.props.timeout + this.props.delay);
+      var intervalId = setInterval(this.update, this.state.timeout + this.props.delay);
       this.setState({intervalId: intervalId, start:true});
     }
   
@@ -111,33 +99,11 @@ class BarChart extends React.Component {
         }), {}), maxVal];
     }
 
-    // sortAxis = (i, descending) => {
-    //   const { data,maxItems } = this.props;
-    //   if(descending === undefined) descending = true;
-    //   // Build a new array to sort e.x. { name: 'some name', val: 1 }
-    //   let toSort = Object.keys(data).map(name => {
-    //     return {
-    //       name,
-    //       val: data[name][i]
-    //     };
-    //   });
-    //   // Handle the sorting based on the values
-    //   toSort.sort((left, right) => left.val - right.val)
-    //   if (descending) {
-    //     toSort.reverse()
-    //   }
-    //   // Slice based on the maximum items allowed
-    //   const fItems = Object.keys(data).length
-    //   if (maxItems && maxItems <= fItems) {
-    //     toSort = toSort.slice(0, maxItems)
-    //   }
-    //   const maxVal = Math.max.apply(Math, toSort.map(item => item.val))
-    //   const minVal = Math.min.apply(Math, toSort.map(item => item.val))
-    //   // Sorted list of results based on the axis
-    //   return [toSort.reduce((ret, item, idx) => ({
-    //     ...ret, ...{ [item.name]: idx }
-    //   }), {}), minVal, maxVal]
-    // }
+    onChangeTimeout = (value) =>{
+      this.setState({
+        timeout:value
+      })
+    }
 
     getInfoFromRank = name => {
       const currIdx = this.state.idx;
@@ -172,6 +138,10 @@ class BarChart extends React.Component {
             {!start&&<Button onClick={this.handlePlay} icon='caret-right' />}
             {isEnd&&<Button onClick={this.handleReplay} icon='reload'/>}
           </ButtonGroup>
+          <Form.Item style={{float:'right',margin:'6px'}}>
+            <span className="ant-form-text">Speed:</span>
+            <InputNumber disabled={start&&!isEnd} value={this.state.timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
+          </Form.Item>
           <br/>
           <div style={this.props.timelineStyle}>
             {this.props.timeline[this.state.idx]}
@@ -185,13 +155,13 @@ class BarChart extends React.Component {
                     <Bar
                       name={name}
                       value={value}
-                      start={start}
+                      start={start&&!isEnd}
                       preValue={preValue}
                       label={this.props.labels[name]}
                       currStyle={currStyle}
                       prevStyle={prevStyle}
                       key={name}
-                      timeout={this.props.timeout}
+                      timeout={this.state.timeout}
                       textBoxStyle={this.props.textBoxStyle}
                       width={this.props.width}
                     />
