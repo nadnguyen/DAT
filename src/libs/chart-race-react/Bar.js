@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transition } from 'react-transition-group'
-
+import BarCounting from './BarCounting'
 const classes = {
     bar: {
         position: "relative",
@@ -58,7 +58,7 @@ function Bar(props) {
                     width: `${props.width[2]}%`
                 }}>
                     <div style={{...props.textBoxStyle}}>
-                        {props.value}
+                        <BarCounting {...props} />
                     </div>
                 </div>
                 </React.Fragment>)
