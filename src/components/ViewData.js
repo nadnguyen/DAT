@@ -66,7 +66,6 @@ class ViewData extends Component {
         const { data,time,labels,colors,len } = this.getData(this.props.data);
         const barChartHeight = window.innerHeight - 188;
         const barMarginTop = 10;
-        // const dataLength = this.props.data.length;
         const barHeight = (barChartHeight - barMarginTop*MAX_ITEMS_SHOW)/MAX_ITEMS_SHOW;
         const columns=this.getColumnTable(this.props.data[0]);
         const {isHorizontal}=this.props;
@@ -85,16 +84,11 @@ class ViewData extends Component {
                     color: "rgb(148, 148, 148)",
                     marginBottom: "20px"
                     }}
-                // textBoxStyle={{
-                //     // textAlign: "right",
-                //     overflow: 'hidden',
-                //     }}
                 barStyle={{
                     height: `${barHeight}px`,
                     marginTop: `${barMarginTop}px`,
                     borderRadius: `${barHeight/2}px`,
                     }}
-                // width={[15, 75, 10]}
                 maxItems={100}
                 maxItemsShow={10}
           
