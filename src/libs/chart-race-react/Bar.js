@@ -31,6 +31,8 @@ function Bar(props) {
           entered: {marginTop: props.currStyle.marginTop},
           exiting: {marginTop: props.currStyle.marginTop},
       }
+      const {height} = barDefaultStyle;
+     
       return (
           <div style={classes.container}>
             <Transition in={true} timeout={props.timeout}>
@@ -40,27 +42,46 @@ function Bar(props) {
                 <div style={{
                     ...posDefaultStyle, 
                     ...posTransitionStyles[state],
-                    width: `${props.width[0]}%`,
+                    height,
+                    display: 'flex',
+                    alignItems: 'center',
                 }}>
-                    {props.label}
+                    {props.label.logo}
                 </div>
-                <div style={{width: `${props.width[1]}%`}}>
+                <div style={{width: '80%',
+                    }}>
                     <div
                         style={{
                             ...classes.bar, 
                             ...barDefaultStyle, 
-                            ...barTransitionStyles[state]}} 
-                    />
-                </div>
-                <div style={{
+                            ...barTransitionStyles[state],
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection:'row-reverse',
+                            paddingRight: '10px',
+                            marginRight: '5px',
+                            float:'left',
+                            color:'#fff',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            }} >
+                        {props.label.name}
+                    </div>
+                    <div style={{
                     ...posDefaultStyle, 
                     ...posTransitionStyles[state],
-                    width: `${props.width[2]}%`
+                    height,
+                    display: 'flex',
+                    flexDirection:'row',
+                    alignItems: 'center',
+                    color:'#555'
                 }}>
-                    <div style={{...props.textBoxStyle}}>
-                        <BarCounting {...props} />
-                    </div>
+                   <BarCounting {...props} />
                 </div>
+
+                       
+                </div>
+              
                 </React.Fragment>)
                 }
             </Transition>

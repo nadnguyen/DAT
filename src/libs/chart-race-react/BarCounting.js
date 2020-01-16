@@ -27,9 +27,9 @@ class BarCounting extends Component {
                
                 if ((range>0&&current >= end)||(range<0&&current <= end)) {
                     clearInterval(this.timer);
-                    obj.innerHTML = end;
+                    obj.innerHTML = `${end}`.slice(0,12);
                 } else {
-                    obj.innerHTML = current;
+                    obj.innerHTML = `${current}`.slice(0,12);
                 }         
        
         }, stepTime);
@@ -37,7 +37,8 @@ class BarCounting extends Component {
      
     }
     render() {
-    return <span id={`counting-${this.props.name}`} >{this.props.value}</span>;
+    return <span
+    id={`counting-${this.props.name}`} >{`${this.props.value}`.slice(0,12)}</span>;
     }
 }
 export default BarCounting;

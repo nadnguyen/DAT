@@ -139,7 +139,7 @@ class BarChart extends React.Component {
             {isEnd&&<Button onClick={this.handleReplay} icon='reload'/>}
           </ButtonGroup>
           <Form.Item style={{float:'right',margin:'6px'}}>
-            <span className="ant-form-text">Speed:</span>
+            <span className="ant-form-text">Lead Time:</span>
             <InputNumber disabled={start&&!isEnd} value={this.state.timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
           </Form.Item>
           <br/>

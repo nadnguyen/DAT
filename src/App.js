@@ -15,6 +15,7 @@ class App extends React.Component {
     this.state = {
       data: [],
       isViewChart:false,
+      isHorizontal:true,
     }
   }
 
@@ -22,6 +23,11 @@ class App extends React.Component {
     this.setState({
       isViewChart:true,
       data:[...data]
+    })
+  }
+  handleChangeView = () =>{
+    this.setState({
+      isHorizontal:!this.state.isHorizontal,
     })
   }
 
@@ -33,7 +39,7 @@ class App extends React.Component {
   }
 
   render(){
-    const { isViewChart,data } = this.state;
+    const { isViewChart,data,isHorizontal } = this.state;
     return (
       <Layout className="layout">
         <Header>
@@ -45,11 +51,12 @@ class App extends React.Component {
           </div>
           <div className="right-header">
           {isViewChart && <Button icon="upload" onClick={this.handleUpload}>Upload File</Button>}
+          {isViewChart&&<Button onClick={this.handleChangeView} icon={isHorizontal?'border-horizontal':'border-verticle'} style={{marginLeft:'10px'}} />}
           </div>
         </Header>
         <Content>
           {!isViewChart&& <UploadData onView={this.handleView}/>}
-          {isViewChart&& <ViewData data={data}/>}
+          {isViewChart&& <ViewData data={data} isHorizontal={isHorizontal}/>}
         </Content>
         <Footer style={{ textAlign: 'center' }}>Data Analytics Tool ©2020 Created by VNTEAM</Footer>
       </Layout>
