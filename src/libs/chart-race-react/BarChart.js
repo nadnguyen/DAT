@@ -1,7 +1,7 @@
 import React from 'react';
 import Bar from './Bar';
-import { InputNumber,Form,Button } from 'antd';
-
+import { Popover,InputNumber,Input,Button } from 'antd';
+import { SketchPicker } from 'react-color';
 const ButtonGroup = Button.Group;
 
 const classes = {
@@ -11,6 +11,38 @@ const classes = {
   },
   container: {
     width: "100%",
+  },
+  toolbar: {
+    width: "100%",
+    display: 'flex',
+    flexDirection:'row-reverse',
+    height:'50px',
+    alignItems: 'center',
+    marginBottom: "10px"
+  },
+  editTool:{
+    display: 'flex',
+    flexDirection:'row-reverse',
+  },
+  control:{
+    display: 'flex',
+    alignItems: 'center',
+    marginRight:'10px'
+  },
+  chartTitle:{
+    width: "100%",
+    fontSize:24,
+    textAlign: 'center',
+  },
+  timeline:{
+    width: "100%",
+    fontSize: "40px",
+    color: "rgb(148, 148, 148)",
+    marginBottom: "20px",
+    textAlign: 'center',
+  },
+  label:{
+    marginRight: "5px",
   }
 }
 class BarChart extends React.Component {
@@ -29,7 +61,13 @@ class BarChart extends React.Component {
             currRank: initRank,
             maxVal: maxVal,
             started: false,
-            timeout:1000,
+            timeout:2000,
+            titleSize:36,
+            titleText:'The Chart Title',
+            titleColor:'rgb(148, 148, 148)',
+            timeSize:30,
+            timeColor:'rgb(148, 148, 148)'
+
         };
     }
 
@@ -99,9 +137,25 @@ class BarChart extends React.Component {
         }), {}), maxVal];
     }
 
-    onChangeTimeout = (value) =>{
+    onChangeTimeout = (value) => {
       this.setState({
         timeout:value
+      })
+    }
+
+    onChangeFontSize = (value,type) => {
+      this.setState({
+        [`${type}Size`]:value
+      })
+    }
+
+    handleChangeColor = (value,type) => {
+      this.setState({ [`${type}Color`]: value.hex });
+    }
+
+    onChangeText = (e,type) => {
+      this.setState({
+        [`${type}Text`]:e.target.value
       })
     }
 
@@ -125,27 +179,66 @@ class BarChart extends React.Component {
       };
       return [value,preValue, hidden, currStyle, prevStyle];
     }
+
+    getToolBar = (type) =>{
+      return (
+        <div style={classes.editTool}>
+        <div style={classes.control}>
+            <b style={classes.label}>Color:</b>
+            <Popover content={<SketchPicker
+              color={this.state[`${type}Color`]}
+              onChangeComplete={ (value)=>this.handleChangeColor(value,type) }
+            />}  trigger="click">
+              <div style={{
+                width:25,
+                height:25,
+                backgroundColor:this.state[`${type}Color`]
+              }}/>
+            </Popover>
+            
+        </div>
+        <div style={classes.control}>
+            <b style={classes.label}>Size: </b>
+            <InputNumber  value={this.state[`${type}Size`]} min={8} max={64} onChange={(value)=>this.onChangeFontSize(value,type)} />
+        </div>
+        {type==='title'&&<div style={classes.control}>
+            <b style={classes.label}>Text: </b>
+            <Input style={{width:200}} value={this.state[`${type}Text`]} onChange={(value)=>this.onChangeText(value,type)} placeholder="Text" />
+        </div>}
+      </div>
+      )
+    }
   
     render(){
-      const { start, idx } = this.state;
+      const { start, idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize } = this.state;
       const { timeline } = this.props;
       const isEnd = idx + 1 === timeline.length;
-      
+      const titleToobar = this.getToolBar('title')
+      const timeToobar = this.getToolBar('time')
       return (
         <div style={classes.container}>
-          <ButtonGroup style={{float:'right',marginTop:'10px'}}>
-            {start&&!isEnd&&<Button onClick={this.handleStop} icon='pause'/>}
-            {!start&&<Button onClick={this.handlePlay} icon='caret-right' />}
-            {isEnd&&<Button onClick={this.handleReplay} icon='reload'/>}
-          </ButtonGroup>
-          <Form.Item style={{float:'right',margin:'6px'}}>
-            <span className="ant-form-text">Lead Time:</span>
-            <InputNumber disabled={start&&!isEnd} value={this.state.timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
-          </Form.Item>
-          <br/>
-          <div style={this.props.timelineStyle}>
-            {this.props.timeline[this.state.idx]}
+          <div style={classes.toolbar}>
+              <ButtonGroup>
+                {start&&!isEnd&&<Button  type="primary" onClick={this.handleStop} icon='pause'/>}
+                {!start&&<Button  type="primary" onClick={this.handlePlay} icon='caret-right' />}
+                {isEnd&&<Button  type="primary" onClick={this.handleReplay} icon='reload'/>}
+              </ButtonGroup>
+            <div style={classes.control}>
+              <b style={classes.label}>Lead Time: </b>
+              <InputNumber disabled={start&&!isEnd} value={timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
+            </div>
+            
           </div>
+          <Popover content={titleToobar}  trigger="click">
+            <div style={{...classes.chartTitle,fontSize:titleSize,color:titleColor}}>
+              {titleText}
+            </div>
+          </Popover>
+          <Popover content={timeToobar}  trigger="click">
+            <div style={{...classes.timeline,fontSize:timeSize,color:timeColor}}>
+              {this.props.timeline[this.state.idx]}
+            </div>
+          </Popover>
           <div style={{...classes.barChart, ...this.barChartStyle}}>
             {
               Object.keys(this.props.data).map(name => {

@@ -64,7 +64,7 @@ class ViewData extends Component {
 
     render(){
         const { data,time,labels,colors,len } = this.getData(this.props.data);
-        const barChartHeight = window.innerHeight - 188;
+        const barChartHeight = window.innerHeight - 300;
         const barMarginTop = 10;
         const barHeight = (barChartHeight - barMarginTop*MAX_ITEMS_SHOW)/MAX_ITEMS_SHOW;
         const columns=this.getColumnTable(this.props.data[0]);
@@ -98,7 +98,7 @@ class ViewData extends Component {
                 background:'#fff',
                 marginTop:'10px'
             }}>
-                <Table  scroll={{ x: 1300,y: barChartHeight }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
+                <Table  scroll={{ x: 1300,y: barChartHeight+100 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
             </Col>
         </Row> )
     }
