@@ -6,7 +6,7 @@ class BarCounting extends Component {
         const {value,name,preValue,timeout} = this.props;
         this.animateValue(`counting-${name}`,preValue,value,timeout)
     }
-    componentWillReceiveProps(nextProps){
+    UNSAFE_componentWillReceiveProps(nextProps){
         const {start} = this.props
         const {value,name,preValue,timeout} = nextProps;
         if(!!start&&this.props.value!==nextProps.name)

@@ -2,7 +2,9 @@ import React from 'react';
 import Bar from './Bar';
 import { Popover,InputNumber,Input,Button } from 'antd';
 import { SketchPicker } from 'react-color';
+import BarUnit from './BarUnit';
 const ButtonGroup = Button.Group;
+
 
 const classes = {
   barChart: {
@@ -11,6 +13,7 @@ const classes = {
   },
   container: {
     width: "100%",
+    overflow: 'hidden',
   },
   toolbar: {
     width: "100%",
@@ -43,7 +46,8 @@ const classes = {
   },
   label:{
     marginRight: "5px",
-  }
+  },
+
 }
 class BarChart extends React.Component {
     constructor(props){
@@ -52,7 +56,7 @@ class BarChart extends React.Component {
         this.nItmes = Object.keys(this.props.data).length;
         this.maxItems = props.maxItems <= this.nItmes ? props.maxItems : this.nItmes;
         this.barChartStyle = {
-            height: `calc(${this.maxItems} * ${this.barHeight})`,
+            height: `calc(${props.maxItemsShow} * ${this.barHeight})`,
         };
         let [initRank, maxVal] = this.sortAxis(0);
         this.state = {
@@ -208,13 +212,27 @@ class BarChart extends React.Component {
       </div>
       )
     }
+
+    getMinVal = (data,currRank,maxItemsShow,idx) =>{
+      let minItem = '';
+      Object.keys(currRank||{}).every((key)=>{
+        if(currRank[key]===maxItemsShow-1){
+          
+          minItem=key;
+          return false;
+        } else
+        return true;
+      })
+      return data[minItem][idx]
+    }
   
     render(){
-      const { start, idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize } = this.state;
-      const { timeline } = this.props;
+      const { start, maxVal,currRank,idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize } = this.state;
+      const { timeline,data,maxItemsShow } = this.props;
       const isEnd = idx + 1 === timeline.length;
       const titleToobar = this.getToolBar('title')
       const timeToobar = this.getToolBar('time')
+      const minVal=this.getMinVal(data,currRank,maxItemsShow,idx)
       return (
         <div style={classes.container}>
           <div style={classes.toolbar}>
@@ -262,7 +280,7 @@ class BarChart extends React.Component {
               })
             }
           </div>
-       
+          <BarUnit  isEnd={isEnd} max={parseInt(maxVal)} min={parseInt(minVal)}/>
         </div>
       );
     }
