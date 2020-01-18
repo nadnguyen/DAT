@@ -1,6 +1,6 @@
 import React from 'react';
 import Bar from './Bar';
-import { Popover,InputNumber,Input,Button } from 'antd';
+import { Popover,InputNumber,Input,Button,Upload,Icon } from 'antd';
 import { SketchPicker } from 'react-color';
 import BarUnit from './BarUnit';
 const ButtonGroup = Button.Group;
@@ -10,6 +10,14 @@ const classes = {
   barChart: {
     width: "100%",
     position: "relative",
+  },
+  chartImage:{
+    position: 'absolute',
+    width: '200px',
+    height: '200px',
+    backgroundColor: 'red',
+    right: '20px',
+    bottom: '11px',
   },
   container: {
     width: "100%",
@@ -70,7 +78,8 @@ class BarChart extends React.Component {
             titleText:'The Chart Title',
             titleColor:'rgb(148, 148, 148)',
             timeSize:30,
-            timeColor:'rgb(148, 148, 148)'
+            timeColor:'rgb(148, 148, 148)',
+            image:null
 
         };
     }
@@ -225,26 +234,48 @@ class BarChart extends React.Component {
       })
       return data[minItem][idx]
     }
+
+    handleUploadChange = (e) =>{
+      const image=URL.createObjectURL(e.file.originFileObj);
+      this.setState({
+        image
+      })
+    }
   
     render(){
-      const { start, maxVal,currRank,idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize } = this.state;
+      const { start, maxVal,currRank,idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize,image } = this.state;
       const { timeline,data,maxItemsShow } = this.props;
       const isEnd = idx + 1 === timeline.length;
       const titleToobar = this.getToolBar('title')
       const timeToobar = this.getToolBar('time')
       const minVal=this.getMinVal(data,currRank,maxItemsShow,idx)
+      const props = {
+        onChange: this.handleUploadChange,
+        multiple: false,
+        showUploadList:false,
+        accept:'image/*'
+      };
       return (
         <div style={classes.container}>
           <div style={classes.toolbar}>
+            
               <ButtonGroup>
                 {start&&!isEnd&&<Button  type="primary" onClick={this.handleStop} icon='pause'/>}
                 {!start&&<Button  type="primary" onClick={this.handlePlay} icon='caret-right' />}
                 {isEnd&&<Button  type="primary" onClick={this.handleReplay} icon='reload'/>}
               </ButtonGroup>
-            <div style={classes.control}>
-              <b style={classes.label}>Lead Time: </b>
-              <InputNumber disabled={start&&!isEnd} value={timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
-            </div>
+              <div style={classes.control}>
+                <Upload {...props}>
+                  <Button>
+                    <Icon type="upload" /> Upload Image
+                  </Button>
+                </Upload>
+              </div>
+              <div style={classes.control}>
+                <b style={classes.label}>Lead Time: </b>
+                <InputNumber disabled={start&&!isEnd} value={timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
+              </div>
+          
             
           </div>
           <Popover content={titleToobar}  trigger="click">
@@ -258,6 +289,9 @@ class BarChart extends React.Component {
             </div>
           </Popover>
           <div style={{...classes.barChart, ...this.barChartStyle}}>
+          {image&&<div style={classes.chartImage} >
+            <img src={image} alt="pic chart" style={{width:'100%'}} />
+           </div>}
             {
               Object.keys(this.props.data).map(name => {
                 const [value,preValue, hidden, currStyle, prevStyle] = this.getInfoFromRank(name);
@@ -280,7 +314,7 @@ class BarChart extends React.Component {
               })
             }
           </div>
-          <BarUnit  isEnd={isEnd} max={parseInt(maxVal)} min={parseInt(minVal)}/>
+          <BarUnit timeout={this.state.timeout} isEnd={isEnd} max={parseInt(maxVal)} min={parseInt(minVal)}/>
         </div>
       );
     }

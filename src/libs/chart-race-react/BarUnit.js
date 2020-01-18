@@ -84,10 +84,9 @@ class BarUnit extends Component {
             
             if(!nextProps.isEnd)
             {
-                const preUnits= getUnits(prevState.max,prevState.stepValue,prevState.unitNumber)
                 const maxUnitValue = getMaxUnitVal(nextProps.min, nextProps.max) 
                 const stepValue=maxUnitValue/(DF_STEP_NUM-1);
-                return { max: nextProps.max,unitNumber:DF_STEP_NUM,stepValue, isEnd:nextProps.isEnd,preUnits };
+                return { max: nextProps.max,unitNumber:DF_STEP_NUM,stepValue, isEnd:nextProps.isEnd,preUnits:{} };
             }
             return {
                 isEnd:nextProps.isEnd
@@ -104,7 +103,7 @@ class BarUnit extends Component {
             {
                 const maxUnitValue = getMaxUnitVal(nextProps.min, nextProps.max) 
                 const stepValue=maxUnitValue/(DF_STEP_NUM-1);
-                return { max: nextProps.max,unitNumber:DF_STEP_NUM,stepValue,preUnits };
+                return { max: nextProps.max,unitNumber:DF_STEP_NUM,stepValue,preUnits:{} };
             }
    
 
@@ -124,13 +123,14 @@ class BarUnit extends Component {
     }
 
     getTransitionStyles = (id,units,preUnits) =>{
+        const { timeout } = this.props;
         const defaultStyle = {
-            transition: `all ${2000}ms ease-in-out`,
-            width: preUnits[id]?preUnits[id].width:'120%'
+            transition: `all ${timeout}ms ease-in-out`,
+            width: preUnits[id]?preUnits[id].width:units[id].width
         }
           
         const transitionStyles = {
-            entering: { width: preUnits[id]?preUnits[id].width:'120%' },
+            entering: { width: preUnits[id]?preUnits[id].width:units[id].width },
             entered:  { width: units[id]?units[id].width:'120%'},
             exiting: { width: units[id]?units[id].width:'120%' },
         };
