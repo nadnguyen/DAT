@@ -15,7 +15,6 @@ const classes = {
     position: 'absolute',
     width: '200px',
     height: '200px',
-    backgroundColor: 'red',
     right: '20px',
     bottom: '11px',
   },
@@ -183,6 +182,7 @@ class BarChart extends React.Component {
         marginTop: `calc(${this.state.currRank[name]} * ${this.barHeight})`,
         width: `${100 * this.props.data[name][currIdx]/ this.state.maxVal}%`,
         backgroundColor: this.props.colors[name],
+        widthRaw:100 * this.props.data[name][currIdx]/ this.state.maxVal
       };
       const prevStyle = {
         ...this.props.barStyle,

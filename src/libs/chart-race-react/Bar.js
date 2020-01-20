@@ -32,6 +32,7 @@ function Bar(props) {
           exiting: {marginTop: props.currStyle.marginTop},
       }
       const {height} = barDefaultStyle;
+      const { widthRaw } = props.currStyle;
      
       return (
           <div style={classes.container}>
@@ -65,7 +66,7 @@ function Bar(props) {
                             overflow: 'hidden',
                             whiteSpace: 'nowrap',
                             }} >
-                        {props.label.name}
+                        {widthRaw>10&&<b>{props.label.name}</b>}
                     </div>
                     <div style={{
                     ...posDefaultStyle, 
@@ -76,7 +77,8 @@ function Bar(props) {
                     alignItems: 'center',
                     color:'#555'
                 }}>
-                   <BarCounting {...props} />
+                   <BarCounting {...props} />&nbsp;
+                    {widthRaw<10&&<b>({props.label.name})</b>}
                 </div>
 
                        
