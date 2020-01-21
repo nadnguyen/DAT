@@ -5,8 +5,8 @@ const styles = {
     container:{
         display: 'flex',
         width: "100%",
-        borderBottom:'1px solid #ccc',
-        margin:'10px 0px 40px 0px',
+        borderBottom:'1px solid #555',
+        margin:'10px 10px 40px 10px',
     },
     unitContainer:{
         marginLeft:'33px',
@@ -16,7 +16,7 @@ const styles = {
     },
     unit:{
         width: '100%',                     
-        borderRight:'1px solid #ccc',
+        borderRight:'1px solid #555',
         height: '10px',
         position:'absolute',
     },
@@ -32,6 +32,7 @@ const styles = {
         top:10,
         right:-50,
         textAlign: 'center',
+        color:'#555'
     }
 }
 
@@ -136,13 +137,17 @@ class BarUnit extends Component {
         };
         return { defaultStyle,transitionStyles }
     }
+    formatNumber = (number) =>{
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
+    }
  
     render(){
         const { stepValue, unitNumber,max,preUnits } = this.state
+        const { textColor } = this.props;
         const units = getUnits( max,stepValue, unitNumber)
         return(
-            <div style={styles.container}>
+            <div style={{...styles.container, borderBottom:`1px solid ${textColor}`,}}>
                 <div style={styles.unitContainer}>
                     {Object.values(units).map(unit=>(
                         <Transition key={unit.value} in={true} timeout={2000}>
@@ -151,11 +156,12 @@ class BarUnit extends Component {
                                 return (
                                     <div  style={{
                                         ...styles.unit,
+                                        borderRight:`1px solid ${textColor}`,
                                         ...defaultStyle,
                                         ...transitionStyles[state]
                                     }}>
                                         <div style={styles.unitLabelCon}>
-                                            <div style={styles.unitLabel}>{unit.value}</div>
+                                            <div style={{...styles.unitLabel, color:textColor}}>{this.formatNumber(unit.value)}</div>
                                         </div>
                                          
                                     </div>

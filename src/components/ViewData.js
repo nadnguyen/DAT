@@ -70,7 +70,7 @@ class ViewData extends Component {
         const columns=this.getColumnTable(this.props.data[0]);
         const {isHorizontal}=this.props;
         return ( <Row gutter={[16, 16]}>
-            <Col span={isHorizontal?14:24}>
+            <Col span={isHorizontal?14:24} style={{padding:0}} >
             <BarChart 
                 data={data} 
                 timeline={time}
@@ -90,7 +90,9 @@ class ViewData extends Component {
             </Col>
             <Col  span={isHorizontal?10:24} style ={{
                 background:'#fff',
-                marginTop:'10px'
+                marginTop:'10px',
+                paddingTop:0,
+                paddingRight:0
             }}>
                 <Table  scroll={{ x: 1300,y: barChartHeight+200 }} columns={columns} dataSource={this.props.data} pagination={false} size="small" />
             </Col>

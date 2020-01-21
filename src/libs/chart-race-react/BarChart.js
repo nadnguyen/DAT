@@ -1,6 +1,6 @@
 import React from 'react';
 import Bar from './Bar';
-import { Popover,InputNumber,Input,Button,Upload,Icon } from 'antd';
+import { Popover,InputNumber,Input,Button,Upload } from 'antd';
 import { SketchPicker } from 'react-color';
 import BarUnit from './BarUnit';
 const ButtonGroup = Button.Group;
@@ -10,6 +10,8 @@ const classes = {
   barChart: {
     width: "100%",
     position: "relative",
+    margin:'0px 10px',
+    overflow: 'hidden',
   },
   chartImage:{
     position: 'absolute',
@@ -20,15 +22,19 @@ const classes = {
   },
   container: {
     width: "100%",
+    backgroundColor:'pink',
     overflow: 'hidden',
+    marginTop:10
   },
   toolbar: {
     width: "100%",
     display: 'flex',
-    flexDirection:'row-reverse',
-    height:'50px',
     alignItems: 'center',
-    marginBottom: "10px"
+    backgroundColor:'black',
+    color:'white',
+    padding:5,
+    marginBottom:20,
+    opacity: 0.5,
   },
   editTool:{
     display: 'flex',
@@ -37,7 +43,7 @@ const classes = {
   control:{
     display: 'flex',
     alignItems: 'center',
-    marginRight:'10px'
+    marginLeft:'10px'
   },
   chartTitle:{
     width: "100%",
@@ -73,12 +79,14 @@ class BarChart extends React.Component {
             maxVal: maxVal,
             started: false,
             timeout:2000,
-            titleSize:36,
+            titleSize:32,
             titleText:'The Chart Title',
             titleColor:'rgb(148, 148, 148)',
-            timeSize:30,
+            timeSize:46,
             timeColor:'rgb(148, 148, 148)',
-            image:null
+            image:null,
+            backgroundColor:'black',
+            textColor:'#555'
 
         };
     }
@@ -243,7 +251,7 @@ class BarChart extends React.Component {
     }
   
     render(){
-      const { start, maxVal,currRank,idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize,image } = this.state;
+      const { start, maxVal,currRank,idx,timeout,titleSize,titleText,titleColor,timeColor,timeSize,image,backgroundColor,textColor } = this.state;
       const { timeline,data,maxItemsShow } = this.props;
       const isEnd = idx + 1 === timeline.length;
       const titleToobar = this.getToolBar('title')
@@ -256,27 +264,41 @@ class BarChart extends React.Component {
         accept:'image/*'
       };
       return (
-        <div style={classes.container}>
-          <div style={classes.toolbar}>
-            
+        <div style={{...classes.container,backgroundColor}}>
+          <div style={classes.toolbar}> 
               <ButtonGroup>
                 {start&&!isEnd&&<Button  type="primary" onClick={this.handleStop} icon='pause'/>}
                 {!start&&<Button  type="primary" onClick={this.handlePlay} icon='caret-right' />}
                 {isEnd&&<Button  type="primary" onClick={this.handleReplay} icon='reload'/>}
               </ButtonGroup>
               <div style={classes.control}>
-                <Upload {...props}>
-                  <Button>
-                    <Icon type="upload" /> Upload Image
-                  </Button>
-                </Upload>
-              </div>
-              <div style={classes.control}>
                 <b style={classes.label}>Lead Time: </b>
                 <InputNumber disabled={start&&!isEnd} value={timeout} min={100} max={10000} onChange={this.onChangeTimeout} />
               </div>
-          
-            
+              <div style={classes.control}>
+                <b style={classes.label}>Image: </b>
+                <Upload {...props}>
+                  <Button icon='upload'/>
+                </Upload>
+              </div>
+              <div style={classes.control}>
+                <b style={classes.label}>Background Color:</b>
+                <Popover content={<SketchPicker
+                  color={backgroundColor}
+                  onChangeComplete={ (value)=>this.handleChangeColor(value,'background') }
+                />}  trigger="click">
+                  <Button icon='bg-colors'/>
+                </Popover>
+              </div>
+              <div style={classes.control}>
+                <b style={classes.label}>Text Color:</b>
+                <Popover content={<SketchPicker
+                  color={textColor}
+                  onChangeComplete={ (value)=>this.handleChangeColor(value,'text') }
+                />}  trigger="click">
+                  <Button icon='highlight'/>
+                </Popover>
+              </div>
           </div>
           <Popover content={titleToobar}  trigger="click">
             <div style={{...classes.chartTitle,fontSize:titleSize,color:titleColor}}>
@@ -309,12 +331,13 @@ class BarChart extends React.Component {
                       timeout={this.state.timeout}
                       textBoxStyle={this.props.textBoxStyle}
                       width={this.props.width}
+                      textColor={textColor}
                     />
                 )
               })
             }
           </div>
-          <BarUnit timeout={this.state.timeout} isEnd={isEnd} max={parseInt(maxVal)} min={parseInt(minVal)}/>
+          <BarUnit  textColor={textColor} timeout={this.state.timeout} isEnd={isEnd} max={parseInt(maxVal)} min={parseInt(minVal)}/>
         </div>
       );
     }

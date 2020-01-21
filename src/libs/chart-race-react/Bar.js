@@ -75,10 +75,10 @@ function Bar(props) {
                     display: 'flex',
                     flexDirection:'row',
                     alignItems: 'center',
-                    color:'#555'
+                    color:props.textColor
                 }}>
-                   <BarCounting {...props} />&nbsp;
-                    {widthRaw<10&&<b>({props.label.name})</b>}
+                    {widthRaw<10&&<b>{props.label.name}</b>}&nbsp;
+                    <BarCounting {...props} />
                 </div>
 
                        
